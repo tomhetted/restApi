@@ -13,6 +13,20 @@ import java.util.Arrays;
 @RestControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
+    // Обработка кастомного исключения для пользователя
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundException.class)
+    public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
+        var response = ErrorResponse.build(
+                HttpStatus.NOT_FOUND, e.getMessage());
+        log.error("User not found: {}", response);
+        if (log.isTraceEnabled()) {
+            log.error(Arrays.toString(e.getStackTrace()));
+        }
+        return response;
+    }
+
+    // Обработка MyException
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(MyException.class)
     public ErrorResponse handleInternalException(MyException e) {
@@ -24,5 +38,4 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         }
         return response;
     }
-
 }

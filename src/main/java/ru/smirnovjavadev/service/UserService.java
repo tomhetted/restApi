@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.smirnovjavadev.dto.UserDto;
 import ru.smirnovjavadev.entity.UserEntity;
 import ru.smirnovjavadev.exception.MyException;
+import ru.smirnovjavadev.exception.UserNotFoundException;
 import ru.smirnovjavadev.mapper.UserMapper;
 import ru.smirnovjavadev.repository.UserRepository;
 
@@ -19,6 +20,12 @@ public class UserService {
 
     public List<UserDto> getAll() {
         return userMapper.toUserDtos(userRepository.findAll());
+    }
+
+    public UserDto getById(Long id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));  // выбрасываем исключение
+        return userMapper.map(user);
     }
 
     public void save(UserDto userDto) throws MyException {
