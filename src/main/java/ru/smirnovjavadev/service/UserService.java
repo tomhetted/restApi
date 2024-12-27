@@ -25,11 +25,15 @@ public class UserService {
     public UserDto getById(Long id) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));  // выбрасываем исключение
-        return userMapper.map(user);
+        return userMapper.toUserDto(user);
     }
 
     public void save(UserDto userDto) throws MyException {
         userRepository.save(userMapper.toUserEntity(userDto));
+    }
+
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id); // Используем метод из репозитория
     }
 
     public void deleteById(Long id) {

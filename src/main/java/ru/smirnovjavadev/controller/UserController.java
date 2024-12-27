@@ -25,11 +25,11 @@ public class UserController {
 
     @GetMapping("/{id}")  // GET /users/{id}
     public ResponseEntity<UserDto> getById(@PathVariable("id") Long id) {
-        UserDto userDto = userService.getById(id);
-        if (userDto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 если пользователь не найден
+        if (!userService.existsById(id)) { // Проверяем, существует ли пользователь с таким id
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404, если не существует
         }
-        return ResponseEntity.ok(userDto); // 200 с найденным пользователем
+        UserDto userDto = userService.getById(id); // Получаем пользователя, если он существует
+        return ResponseEntity.ok(userDto); // Возвращаем пользователя с кодом 200 OK
     }
 
     @PostMapping  // POST /users
@@ -38,16 +38,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build(); // Возвращает код 201
     }
 
-    @DeleteMapping("/{id}")  // DELETE /users/{id}
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
-        userService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Возвращает код 204
-    }
-
     @PutMapping("/{id}")  // PUT /users/{id}
     public ResponseEntity<Void> updateById(@RequestBody @Valid UserDto userDto, @PathVariable("id") Long id) {
+        if (!userService.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         userService.updateById(id, userDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Возвращает код 204
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/{id}") // DELETE /users{id}
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+        if (!userService.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        userService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/orderByAge/{age}")  // GET /users/orderByAge/{age}
