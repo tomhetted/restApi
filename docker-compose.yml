@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .  # Строим образ из текущей директории
+      dockerfile: Dockerfile
+    container_name: rest_api_app
+    ports:
+      - "8080:8080"  # Пробрасываем порт 8888 наружу
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/mydb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db  # Зависимость от БД
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    ports:
+      - "3306:3306"  # Пробрасываем порт 3306 для MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+    volumes:
+      - mysql-data:/var/lib/mysql  # Данные сохраняются между перезапусками
+
+volumes:
+  mysql-data:
+    driver: local

@@ -1,15 +1,15 @@
 spring:
-  main:
-    web-application-type: servlet
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/whiskey
+    url: jdbc:mysql://db:3306/mydb # url: jdbc:mysql://localhost:3306/whiskey
     username: root
     password: root
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # Автоматическое обновление схемы базы данных
+#    properties:
+#      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect  # Указываем диалект для MySQL
 
 server:
-  port: 4555
+  port: 8080

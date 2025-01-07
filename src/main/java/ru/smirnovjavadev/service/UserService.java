@@ -23,9 +23,9 @@ public class UserService {
     }
 
     public UserDto getById(Long id) {
-        UserEntity user = userRepository.findById(id)
+        UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));  // выбрасываем исключение
-        return userMapper.toUserDto(user);
+        return userMapper.toUserDto(userEntity);
     }
 
     public void save(UserDto userDto) throws MyException {
