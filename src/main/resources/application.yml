@@ -7,9 +7,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update  # Автоматическое обновление схемы базы данных
-#    properties:
-#      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect  # Указываем диалект для MySQL
+      ddl-auto: update
 
 server:
   port: 8080
